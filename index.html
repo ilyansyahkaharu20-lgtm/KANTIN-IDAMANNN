@@ -97,24 +97,36 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- STEP 3: PEMBAYARAN -->
+        <!-- STEP 3: PILIH METODE BAYAR -->
         <!-- ============================================== -->
         <div id="step3" class="p-6 hidden">
-            <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">3. Proses Pembayaran</h3>
+            <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">3. Pilih Pembayaran</h3>
             
+            <div class="grid grid-cols-3 gap-3 mb-5">
+                <button onclick="pilihMetode('Tunai')" id="btnTunai" class="bg-gray-200 p-3 rounded-xl text-center font-semibold">
+                    💰 Tunai
+                </button>
+                <button onclick="pilihMetode('Debit')" id="btnDebit" class="bg-gray-200 p-3 rounded-xl text-center font-semibold">
+                    💳 Debit
+                </button>
+                <button onclick="pilihMetode('QRIS')" id="btnQRIS" class="bg-gray-200 p-3 rounded-xl text-center font-semibold">
+                    📱 QRIS
+                </button>
+            </div>
+
             <div class="bg-blue-50 p-4 rounded-xl mb-4 text-center">
                 <p class="text-sm text-gray-600">Total Tagihan</p>
                 <p id="tagihan" class="font-bold text-2xl text-blue-700"></p>
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-semibold mb-2">Masukkan Uang/Saldo:</label>
+                <label id="labelUang" class="block text-sm font-semibold mb-2">Masukkan Jumlah Uang:</label>
                 <input type="number" id="inputUang" placeholder="Contoh: 20000" class="w-full p-3 border-2 border-kuning rounded-xl text-center text-xl font-bold">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="bayarGagal()" class="bg-red-100 text-red-600 py-3 rounded-xl font-bold">
-                    ❌ GAGAL (Uang Kurang)
+                    ❌ GAGAL
                 </button>
                 <button onclick="bayarSukses()" class="bg-green-100 text-green-600 py-3 rounded-xl font-bold">
                     ✅ SUKSES
@@ -130,6 +142,7 @@
 
             <div class="text-6xl mb-4">👨‍🍳</div>
             <p id="statusMasak" class="font-bold text-lg mb-5 text-oren"></p>
+            <p id="infoBayar" class="text-sm text-gray-600 mb-5"></p>
 
             <button onclick="selesai()" class="w-full bg-kuning text-gelap py-3 rounded-xl font-bold text-xl hover:bg-oren">
                 🎉 SELESAI / END
@@ -143,6 +156,7 @@
         let keranjang = [];
         let totalBayar = 0;
         let tempNama, tempHarga;
+        let metodeBayar = "";
 
         // 1. PILIH MENU
         function pilihMenu(nama, harga) {
@@ -157,7 +171,6 @@
             let jumlah = parseInt(document.getElementById('inputJumlah').value);
             let subtotal = tempHarga * jumlah;
 
-            // Masukkan ke array keranjang
             keranjang.push({
                 nama: tempNama,
                 harga: tempHarga,
@@ -198,7 +211,7 @@
             document.getElementById('cekMenu').innerText = keranjang.map(i => i.nama).join(", ");
         }
 
-        // 2. CEK STOK (YA / TIDAK)
+        // 2. CEK STOK
         function stokAda() {
             alert("✅ Menu TERSEDIA! Lanjut ke pembayaran.");
             document.getElementById('step2').classList.add('hidden');
@@ -212,20 +225,56 @@
             document.getElementById('step1').classList.remove('hidden');
         }
 
-        // 3. PEMBAYARAN (SUKSES / GAGAL)
+        // 3. PILIH METODE & BAYAR
+        function pilihMetode(metode) {
+            metodeBayar = metode;
+            
+            // Reset warna
+            document.getElementById('btnTunai').className = 'bg-gray-200 p-3 rounded-xl text-center font-semibold';
+            document.getElementById('btnDebit').className = 'bg-gray-200 p-3 rounded-xl text-center font-semibold';
+            document.getElementById('btnQRIS').className = 'bg-gray-200 p-3 rounded-xl text-center font-semibold';
+
+            // Warna aktif
+            if(metode === 'Tunai') {
+                document.getElementById('btnTunai').className = 'bg-kuning/50 p-3 rounded-xl text-center font-semibold border-2 border-oren';
+                document.getElementById('labelUang').innerText = "Masukkan Jumlah Uang Tunai:";
+            } else if(metode === 'Debit') {
+                document.getElementById('btnDebit').className = 'bg-kuning/50 p-3 rounded-xl text-center font-semibold border-2 border-oren';
+                document.getElementById('labelUang').innerText = "Cek Saldo di Kartu:";
+            } else {
+                document.getElementById('btnQRIS').className = 'bg-kuning/50 p-3 rounded-xl text-center font-semibold border-2 border-oren';
+                document.getElementById('labelUang').innerText = "Scan & Masukkan Nominal:";
+            }
+        }
+
         function bayarSukses() {
             let uang = parseInt(document.getElementById('inputUang').value) || 0;
+            if(!metodeBayar) {
+                alert("⚠️ Pilih metode pembayaran dulu!");
+                return;
+            }
+
             if(uang >= totalBayar) {
                 document.getElementById('step3').classList.add('hidden');
                 document.getElementById('step4').classList.remove('hidden');
                 document.getElementById('statusMasak').innerText = "🍳 Sedang dimasak...\n📦 Siap disajikan!";
+                
+                let info = `Metode: ${metodeBayar}`;
+                if(metodeBayar === 'Tunai') {
+                    let kembali = uang - totalBayar;
+                    info += `<br>Kembalian: Rp ${kembali.toLocaleString()}`;
+                } else {
+                    info += `<br>Pembayaran Berhasil`;
+                }
+                document.getElementById('infoBayar').innerHTML = info;
+
             } else {
-                alert("❌ Uang kurang! Klik tombol GAGAL.");
+                alert("❌ Uang/Saldo kurang! Klik tombol GAGAL.");
             }
         }
 
         function bayarGagal() {
-            alert("❌ PEMBAYARAN GAGAL!\nUang tidak cukup atau saldo habis.");
+            alert(`❌ PEMBAYARAN GAGAL!\nCek ${metodeBayar} Anda.`);
             document.getElementById('step3').classList.add('hidden');
             document.getElementById('step1').classList.remove('hidden');
         }
@@ -237,5 +286,4 @@
         }
     </script>
 </body>
-                    </html>
-                    
+</html>
