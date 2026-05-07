@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kantin Idaman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kuning: '#FFD600',
+                        oren: '#FFAB00',
+                        gelap: '#212121',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-amber-50 font-poppins min-h-screen flex justify-center items-center p-4">
+
+    <div class="w-full max-w-sm bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-kuning">
+        
+        <!-- HEADER -->
+        <div class="bg-kuning text-gelap p-5 text-center font-bold text-2xl uppercase tracking-wider">
+            🍱 Kantin Idaman
+        </div>
+
+        <!-- ============================================== -->
+        <!-- STEP 1: PILIH MENU & JUMLAH -->
+        <!-- ============================================== -->
+        <div id="step1" class="p-6">
+            <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">1. Pilih Menu & Jumlah</h3>
+            
+            <div class="space-y-3 mb-5">
+                <button onclick="pilih('Nasi Goreng', 15000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
+                    🍛 Nasi Goreng <span class="float-right">Rp 15.000</span>
+                </button>
+                <button onclick="pilih('Mie Goreng', 12000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
+                    🍜 Mie Goreng <span class="float-right">Rp 12.000</span>
+                </button>
+                <button onclick="pilih('Ayam Geprek', 18000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
+                    🍗 Ayam Geprek <span class="float-right">Rp 18.000</span>
+                </button>
+                <button onclick="pilih('Es Teh', 3000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
+                    🧋 Es Teh Manis <span class="float-right">Rp 3.000</span>
+                </button>
+            </div>
+
+            <div id="keranjang" class="hidden bg-gray-50 p-4 rounded-xl mb-4">
+                <h4 class="font-bold text-sm text-gray-600 mb-2">Pesanan:</h4>
+                <div id="listPesan"></div>
+                <div class="mt-3 pt-3 border-t border-dashed font-bold text-right text-lg">
+                    Total: <span id="totalHarga" class="text-red-500">Rp 0</span>
+                </div>
+            </div>
+
+            <button onclick="cekStok()" class="w-full bg-kuning text-gelap py-3 rounded-xl font-bold text-lg hover:bg-oren transition-all">
+                Cek Ketersediaan ➡️
+            </button>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- STEP 2: CEK STOK -->
+        <!-- ============================================== -->
+        <div id="step2" class="p-6 hidden">
+            <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">2. Cek Stok Menu</h3>
+            
+            <div class="text-center p-5 bg-gray-100 rounded-xl mb-5">
+                <p class="text-base mb-4">Menu yang dipilih:</p>
+                <p id="cekMenu" class="font-bold text-xl text-oren"></p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="stokTidakAda()" class="bg-red-100 text-red-600 py-3 rounded-xl font-bold">
+                    ❌ Tidak Tersedia
+                </button>
+                <button onclick="stokAda()" class="bg-green-100 text-green-600 py-3 rounded-xl font-bold">
+                    ✅ Tersedia
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- STEP 3: PEMBAYARAN -->
+        <!-- ============================================== -->
+        <div id="step3" class="p-6 hidden">
+            <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">3. Proses Pembayaran</h3>
+            
+            <div class="bg-blue-50 p-4 rounded-xl mb-4 text-center">
+                <p class="text-sm text-gray-600">Total Tagihan</p>
+                <p id="tagihan" class="font-bold text-2xl text-blue-700"></p>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-semibold mb-2">Masukkan Uang/Saldo:</label>
+                <input type="number" id="inputUang" placeholder="Contoh: 20000" class="w-full p-3 border-2 border-kuning rounded-xl text-center text-xl font-bold">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="bayarGagal()" class="bg-red-100 text-red-600 py-3 rounded-xl font-bold">
+                    ❌ GAGAL (Uang Kurang)
+                </button>
+                <button onclick="bayarSukses()" class="bg-green-100 text-green-600 py-3 rounded-xl font-bold">
+                    ✅ SUKSES
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- STEP 4: PROSES AKHIR -->
+        <!-- ============================================== -->
+        <div id="step4" class="p-6 hidden text-center">
+            <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">4. Penyajian</h3>
+
+            <div class="text-6xl mb-4">👨‍🍳</div>
+            <p id="statusMasak" class="font-bold text-lg mb-5 text-oren"></p>
+
+            <button onclick="selesai()" class="w-full bg-kuning text-gelap py-3 rounded-xl font-bold text-xl hover:bg-oren">
+                🎉 SELESAI / END
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // VARIABEL GLOBAL
+        let menu = [];
+        let total = 0;
+        let namaMenuDipilih = "";
+        let hargaMenuDipilih = 0;
+
+        // 1. PILIH MENU
+        function pilih(nama, harga) {
+            namaMenuDipilih = nama;
+            hargaMenuDipilih = harga;
+            
+            document.getElementById('keranjang').classList.remove('hidden');
+            document.getElementById('listPesan').innerHTML = `<p class="font-bold">${nama} x 1</p>`;
+            document.getElementById('totalHarga').innerText = `Rp ${harga.toLocaleString()}`;
+            total = harga;
+        }
+
+        function cekStok() {
+            if(total === 0) {
+                alert("⚠️ Silakan pilih menu dulu!");
+                return;
+            }
+            // Pindah ke Step 2
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('cekMenu').innerText = namaMenuDipilih;
+        }
+
+        // 2. CEK STOK (YA / TIDAK)
+        function stokAda() {
+            alert("✅ Menu TERSEDIA! Lanjut ke pembayaran.");
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('tagihan').innerText = `Rp ${total.toLocaleString()}`;
+        }
+
+        function stokTidakAda() {
+            alert("❌ Menu HABIS! Silakan pilih menu lain.");
+            // Kembali ke awal
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+
+        // 3. PEMBAYARAN (SUKSES / GAGAL)
+        function bayarSukses() {
+            let uang = parseInt(document.getElementById('inputUang').value) || 0;
+            if(uang >= total) {
+                document.getElementById('step3').classList.add('hidden');
+                document.getElementById('step4').classList.remove('hidden');
+                document.getElementById('statusMasak').innerText = "🍳 Sedang dimasak...\n📦 Siap disajikan!";
+            } else {
+                alert("❌ Uang kurang! Klik tombol GAGAL.");
+            }
+        }
+
+        function bayarGagal() {
+            alert("❌ PEMBAYARAN GAGAL!\nUang tidak cukup atau saldo habis.");
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step1').classList.remove('hidden');
+        }
+
+        // 4. END
+        function selesai() {
+            alert("🏁 PROSES SELESAI!\nTerima kasih sudah membeli!");
+            // Reset ke START
+            location.reload();
+        }
+    </script>
+</body>
+</html>
