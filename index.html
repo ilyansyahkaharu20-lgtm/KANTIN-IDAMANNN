@@ -39,7 +39,6 @@
             <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">1. Pilih Menu</h3>
             
             <div class="space-y-3 mb-5">
-                <!-- MAKANAN -->
                 <button onclick="pilihMenu('Nasi Goreng', 15000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
                     🍛 Nasi Goreng <span class="float-right">Rp 15.000</span>
                 </button>
@@ -58,8 +57,6 @@
                 <button onclick="pilihMenu('Telur Balado', 6000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
                     🌶️ Telur Balado <span class="float-right">Rp 6.000</span>
                 </button>
-
-                <!-- MINUMAN -->
                 <button onclick="pilihMenu('Es Teh Manis', 3000)" class="w-full bg-kuning/20 hover:bg-kuning/50 p-3 rounded-xl font-semibold transition-all text-left">
                     🧋 Es Teh Manis <span class="float-right">Rp 3.000</span>
                 </button>
@@ -76,18 +73,19 @@
                 <label class="block text-sm font-semibold mb-2">Mau berapa porsi <span id="labelMenu" class="text-oren"></span>?</label>
                 <input type="number" id="inputJumlah" value="1" min="1" class="w-full p-3 border-2 border-kuning rounded-xl text-center text-xl font-bold">
                 <button onclick="tambahKeKeranjang()" class="w-full mt-2 bg-green-500 text-white py-2 rounded-xl font-bold">
-                    ✅ Tambahkan ke Pesanan
+                    ✅ Tambahkan
                 </button>
             </div>
 
             <div id="keranjang" class="hidden bg-gray-50 p-4 rounded-xl mb-4">
-                <h4 class="font-bold text-sm text-gray-600 mb-2">📝 Daftar Pesanan:</h4>
+                <h4 class="font-bold text-sm text-gray-600 mb-2">📝 Pesanan:</h4>
                 <div id="listPesan"></div>
                 <div class="mt-3 pt-3 border-t border-dashed font-bold text-right text-lg">
                     Total: <span id="totalHarga" class="text-red-500">Rp 0</span>
                 </div>
             </div>
 
+            <!-- TOMBOL LANJUT - SUDAH DIPERBAIKI -->
             <button onclick="cekStok()" class="w-full bg-kuning text-gelap py-3 rounded-xl font-bold text-lg hover:bg-oren transition-all mt-3">
                 LANJUT ➡️
             </button>
@@ -106,7 +104,7 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <button onclick="stokTidakAda()" class="bg-red-100 text-red-600 py-3 rounded-xl font-bold">
-                    ❌ HABIS / TIDAK ADA
+                    ❌ HABIS
                 </button>
                 <button onclick="stokAda()" class="bg-green-100 text-green-600 py-3 rounded-xl font-bold">
                     ✅ TERSEDIA
@@ -137,9 +135,8 @@
                 <p id="tagihan" class="font-bold text-2xl text-blue-700"></p>
             </div>
 
-            <!-- AREA QR CODE -->
             <div id="areaQR" class="hidden text-center mb-4">
-                <p class="text-sm font-semibold mb-2">📷 Scan disini:</p>
+                <p class="text-sm font-semibold mb-2">📷 Scan QR:</p>
                 <div class="bg-white p-3 inline-block rounded-xl border-2 border-dashed border-gray-400">
                     <span style="font-size: 80px;">🆇</span>
                 </div>
@@ -165,13 +162,11 @@
         <!-- ============================================== -->
         <div id="step4" class="p-6 hidden text-center">
             <h3 class="text-lg font-bold mb-4 border-b-2 border-kuning pb-2">4. Penyajian</h3>
-
             <div class="text-6xl mb-4">👨‍🍳</div>
-            <p id="statusMasak" class="font-bold text-lg mb-2 text-oren">Sedang dimasak...</p>
+            <p id="statusMasak" class="font-bold text-lg mb-2 text-oren">🍽️ Siap disajikan!</p>
             <p id="infoBayar" class="text-sm text-gray-600 mb-5"></p>
-
             <button onclick="selesai()" class="w-full bg-kuning text-gelap py-3 rounded-xl font-bold text-xl hover:bg-oren">
-                🎉 SELESAI / END
+                🎉 SELESAI
             </button>
         </div>
 
@@ -223,13 +218,13 @@
                     </div>
                 `;
             });
-
             document.getElementById('totalHarga').innerText = `Rp ${totalBayar.toLocaleString()}`;
         }
 
+        // FUNGSI TOMBOL LANJUT - SUDAH DIPERBAIKI
         function cekStok() {
             if(totalBayar === 0) {
-                alert("⚠️ Silakan pilih menu dulu!");
+                alert("⚠️ Silakan pilih menu dan tambahkan ke pesanan dulu!");
                 return;
             }
             document.getElementById('step1').classList.add('hidden');
@@ -254,14 +249,11 @@
         // 3. PILIH METODE & BAYAR
         function pilihMetode(metode) {
             metodeBayar = metode;
-            
-            // Reset warna
             document.getElementById('btnTunai').className = 'bg-gray-200 p-3 rounded-xl text-center font-semibold';
             document.getElementById('btnDebit').className = 'bg-gray-200 p-3 rounded-xl text-center font-semibold';
             document.getElementById('btnQRIS').className = 'bg-gray-200 p-3 rounded-xl text-center font-semibold';
             document.getElementById('areaQR').classList.add('hidden');
 
-            // Warna aktif
             if(metode === 'Tunai') {
                 document.getElementById('btnTunai').className = 'bg-kuning/50 p-3 rounded-xl text-center font-semibold border-2 border-oren';
                 document.getElementById('labelUang').innerText = "Masukkan Uang Tunai:";
@@ -281,27 +273,13 @@
                 alert("⚠️ Pilih metode bayar dulu!");
                 return;
             }
-
             if(uang >= totalBayar) {
                 document.getElementById('step3').classList.add('hidden');
                 document.getElementById('step4').classList.remove('hidden');
-                document.getElementById('statusMasak').innerText = "🍽️ Siap disajikan!";
-                
                 let info = `Metode: ${metodeBayar}`;
                 if(metodeBayar === 'Tunai') {
                     let kembali = uang - totalBayar;
                     info += `<br>Kembalian: Rp ${kembali.toLocaleString()}`;
                 } else {
-                    info += `<br>Transaksi Berhasil`;
-                }
-                document.getElementById('infoBayar').innerHTML = info;
-
-            } else {
-                alert("❌ Uang kurang!");
-            }
-        }
-
-        function bayarGagal() {
-            alert(`❌ PEMBAYARAN GAGAL!`);
-            document
+                    info
         
