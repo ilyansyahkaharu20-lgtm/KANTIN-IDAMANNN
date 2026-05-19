@@ -14,6 +14,7 @@
                         kuning: '#FFB703',
                         hijau: '#10B981',
                         biru: '#3B82F6',
+                        merah: '#EF4444',
                     },
                 }
             }
@@ -86,7 +87,7 @@
                 <p class="mb-2">Menu: <span id="namaMenuCek" class="font-semibold"></span></p>
                 <div class="grid grid-cols-2 gap-2 mb-3">
                     <button onclick="menuTersedia()" class="bg-hijau text-white p-2 rounded-lg hover:bg-hijau/80">✅ Tersedia</button>
-                    <button onclick="menuHabis()" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600">❌ Habis</button>
+                    <button onclick="menuHabis()" class="bg-merah text-white p-2 rounded-lg hover:bg-merah/80">❌ Habis</button>
                 </div>
             </div>
 
@@ -157,11 +158,11 @@
                 <p class="text-hijau font-bold text-xl mb-3">✅ PEMBAYARAN BERHASIL</p>
                 <p class="mb-1">Nomor Antrean Anda:</p>
                 <p class="text-4xl font-bold text-oren mb-4" id="noAntrean">00</p>
-                <p class="text-sm text-gray-700">Silakan menunggu dipanggil sesuai nomor antrean.</p>
+                <p class="text-sm text-gray-700">Silakan menunggu dipanggil sesuai nomor antrean.<br>Makanan sedang disiapkan.</p>
             </div>
 
             <button onclick="selesaiProses()" class="w-full bg-oren text-white p-3 rounded-xl hover:bg-oren/90 font-bold">
-                🏁 Selesai & Ambil Makanan
+                🏁 Selesai & Kembali
             </button>
         </div>
 
@@ -307,6 +308,5 @@
             // LOGIKA SESUAI DIAGRAM:
             if(uangDiberikan >= totalBayar) {
                 // SALDO CUKUP -> Proses potong & cetak struk
-                let kembalian = uangDiberikan - totalBayar;
-                hasilEl.className = 'p-3 bg-hijau/10 border border-hijau/30 rounded-xl mb-
-                        
+                let kembalian = uangDiberikan - totalBay
+        
